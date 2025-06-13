@@ -10,6 +10,10 @@ resource funcAppConfig 'Microsoft.Web/sites/config@2024-11-01' = {
   parent: funcApp
   name: 'authsettingsV2'
   properties: {
+    globalValidation:{
+      requireAuthentication:true
+      unauthenticatedClientAction:'RedirectToLoginPage'
+    }
     identityProviders: {
       azureActiveDirectory: {
         enabled:true
