@@ -1,0 +1,29 @@
+param tenantId string
+param funcAppName string
+param funcAppAppRegClient string
+
+resource funcApp 'Microsoft.Web/sites@2024-11-01' existing = {
+  name: funcAppName
+}
+
+resource funcAppConfig 'Microsoft.Web/sites/config@2024-11-01' = {
+  parent: funcApp
+  name: 'authsettingsV2'
+  properties: {
+    identityProviders: {
+      azureActiveDirectory: {
+        enabled:true
+        isAutoProvisioned:true
+        login:{
+          disableWWWAuthenticate:false
+          loginParameters:[]
+        }
+        registration:{
+          clientId:funcAppAppRegClient
+          openIdIssuer:'https://sts.windows.net/${tenantId}/v2.0'
+        }
+      }
+    }
+  }
+}
+

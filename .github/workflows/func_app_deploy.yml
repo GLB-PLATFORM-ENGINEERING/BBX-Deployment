@@ -1,0 +1,55 @@
+name: Function App Deployment
+
+on:
+    workflow_dispatch:
+        inputs:
+            rgname:
+                description: "The Resource group name"
+                required: true
+                default: ''
+                type: string
+            faname:
+                description: "The function app name"
+                required: true
+                default: ''
+                type: string
+            dsname:
+                description: "Name of deployment stack"
+                required: true
+                default: ''
+                type: string
+
+permissions:
+    id-token: write
+    contents: read
+
+env:
+    TenantId: ${{secrets.AZURE_TENANT_ID}}
+    DeploymentStackName: ${{github.event.inputs.dsname}}
+    functionAppName: ${{github.event.inputs.faname}}
+    AzFaAppRegClient: ${{secrets.AZURE_FUNCTION_APP_CLIENT}}
+    ResourceGroupName: ${{github.event.inputs.rgname}}
+
+jobs:
+    FunctionAppDeployment:
+        name: Function App Deployment
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Login to Azure
+              uses: azure/login@v2
+              with:
+                client-id: ${{secrets.AZURE_CLIENT_ID}}
+                tenant-id: ${{secrets.AZURE_TENANT_ID}}
+                subscription-id: ${{secrets.AZURE_SUBSCRIPTION_ID}}
+                
+            - name: Function App Deployment
+              uses: azure/cli@v2
+              with:
+                azcliversion: 'latest'
+                inlineScript: |
+                    az stack group create --name $DeploymentStackName --resource-group $ResourceGroupName --parameters ./IaC/main.bicepparam --action-on-unmanage deleteResources --deny-settings-mode none
+
+        
