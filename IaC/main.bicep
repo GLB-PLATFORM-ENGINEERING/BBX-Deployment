@@ -20,7 +20,18 @@ resource funcAppConfig 'Microsoft.Web/sites/config@2024-11-01' = {
         }
         registration:{
           clientId:funcAppAppRegClient
+          clientSecretSettingName:'MICROSOFT_PROVIDER_AUTHENTICATION_SECRET'
           openIdIssuer:'https://sts.windows.net/${tenantId}/v2.0'
+        }
+        validation:{
+          allowedAudiences:['api://${funcAppAppRegClient}']
+          defaultAuthorizationPolicy:{
+            allowedApplications:[funcAppAppRegClient]
+            allowedPrincipals:{
+              groups:[]
+              identities:[]
+            }
+          }
         }
       }
     }
