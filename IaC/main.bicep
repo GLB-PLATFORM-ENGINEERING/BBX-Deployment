@@ -13,6 +13,7 @@ resource funcAppConfig 'Microsoft.Web/sites/config@2024-11-01' = {
     globalValidation:{
       requireAuthentication:true
       unauthenticatedClientAction:'RedirectToLoginPage'
+      redirectToProvider:'Microsoft'
     }
     identityProviders: {
       azureActiveDirectory: {
@@ -37,6 +38,11 @@ resource funcAppConfig 'Microsoft.Web/sites/config@2024-11-01' = {
             }
           }
         }
+      }
+    }
+    login:{
+      tokenStore:{
+        enabled:true
       }
     }
   }
