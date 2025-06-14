@@ -32,10 +32,6 @@ resource funcAppConfig 'Microsoft.Web/sites/config@2024-11-01' = {
           allowedAudiences:['api://${funcAppAppRegClient}']
           defaultAuthorizationPolicy:{
             allowedApplications:[funcAppAppRegClient]
-            allowedPrincipals:{
-              groups:[]
-              identities:[]
-            }
           }
         }
       }
