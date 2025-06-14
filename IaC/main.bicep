@@ -1,5 +1,7 @@
 param tenantId string
+
 param funcAppName string
+
 param funcAppAppRegClient string
 
 resource funcApp 'Microsoft.Web/sites@2024-11-01' existing = {

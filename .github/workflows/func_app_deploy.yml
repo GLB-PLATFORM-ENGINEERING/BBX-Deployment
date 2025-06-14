@@ -3,13 +3,28 @@ name: Function App Deployment
 on:
     workflow_dispatch:
         inputs:
+            customer:
+                description: "Customer name"
+                required: true
+                default: 'xoc'
+                options:
+                    - xoc
+                    - llm
+                    - fbi
+                    - nasa
+                type: choice
             rgname:
-                description: "The Resource group name"
+                description: "Resource group name"
                 required: true
                 default: ''
                 type: string
             faname:
-                description: "The function app name"
+                description: "Function app name"
+                required: true
+                default: ''
+                type: string
+            acname:
+                description: "App Configuration name"
                 required: true
                 default: ''
                 type: string
@@ -24,11 +39,13 @@ permissions:
     contents: read
 
 env:
+    Customer: ${{github.event.inputs.customer}}
     TenantId: ${{secrets.AZURE_TENANT_ID}}
     DeploymentStackName: ${{github.event.inputs.dsname}}
     functionAppName: ${{github.event.inputs.faname}}
     AzFaAppRegClient: ${{secrets.AZURE_FUNCTION_APP_CLIENT}}
     ResourceGroupName: ${{github.event.inputs.rgname}}
+    AppConfigName: ${{github.event.inputs.acname}}
 
 jobs:
     FunctionAppDeployment:
@@ -51,5 +68,18 @@ jobs:
                 azcliversion: 'latest'
                 inlineScript: |
                     az stack group create --name $DeploymentStackName --resource-group $ResourceGroupName --parameters ./IaC/main.bicepparam --action-on-unmanage deleteResources --deny-settings-mode none
+            
+            - name: Import configuration file to App Configuration
+              uses: azure/cli@v2
+              with:
+                azcliversion: 'latest'
+                inlineScript: |
+                    json="{"
+                    json+="\"AA-ConfigDB:SqlConnectionString\":\"Server=sql-boc-${Customer}cat.database.windows.net;Database=AA-ConfigDB;Encrypt=True;Authentication=Active Directory Managed Identity;\","
+                    json+="\AA-SDUIDB:SqlConnectionString\":\"Server=sql-boc-${Customer}cat.database.windows.net;Database=AA-ConfigDB;Encrypt=True;Authentication=Active Directory Managed Identity;\","
+                    json+="}"
+                    echo "$json" > appsettings.json
+                    az appconfig kv import --name $AppConfigName --auth-mode login --path /appsettings.json --format json --separator : --yes
+
 
         
