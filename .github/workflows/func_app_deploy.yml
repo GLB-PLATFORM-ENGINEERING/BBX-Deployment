@@ -79,7 +79,7 @@ jobs:
                     json+="\AA-SDUIDB:SqlConnectionString\":\"Server=sql-boc-${Customer}cat.database.windows.net;Database=AA-ConfigDB;Encrypt=True;Authentication=Active Directory Managed Identity;\","
                     json+="}"
                     echo "$json" > appsettings.json
-                    az appconfig kv import --name $AppConfigName --auth-mode login --path /appsettings.json --format json --separator : --yes
+                    az appconfig kv import --name $AppConfigName --auth-mode login --source file --path /appsettings.json --format json --separator : --yes
 
 
         
