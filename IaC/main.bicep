@@ -4,8 +4,16 @@ param funcAppName string
 
 param funcAppAppRegClient string
 
+param automationAccountName string
+
+param appConfigName string
+
 resource funcApp 'Microsoft.Web/sites@2024-11-01' existing = {
   name: funcAppName
+}
+
+resource appConfig 'Microsoft.AppConfiguration/configurationStores@2024-06-01' existing = {
+  name: appConfigName
 }
 
 resource funcAppConfig 'Microsoft.Web/sites/config@2024-11-01' = {
@@ -43,6 +51,34 @@ resource funcAppConfig 'Microsoft.Web/sites/config@2024-11-01' = {
         enabled:true
       }
     }
+  }
+}
+
+resource automationAccount 'Microsoft.Automation/automationAccounts@2024-10-23' = {
+  name: automationAccountName
+  location: 'westeurope'
+  identity: {type:'SystemAssigned'}
+  properties:{
+    sku: {name: 'Free'}
+    publicNetworkAccess: true
+  }
+}
+
+resource automationAccounts_AppConfig_var 'Microsoft.Automation/automationAccounts/variables@2024-10-23' = {
+  parent: automationAccount
+  name: 'AppConfigName'
+  properties: {
+    isEncrypted: false
+    value: appConfigName
+  }
+}
+
+resource aasystemAssignedIdentityAppConfig 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid('App configuration data owner', 'Tenant', automationAccountName, appConfigName)
+  scope: appConfig
+  properties: {
+    principalId:automationAccount.identity.principalId
+    roleDefinitionId:subscriptionResourceId('Microsoft.Authorization/roleDefintions', '5ae67dd6-50cb-40e7-96ff-dc2bfa4b606b')
   }
 }
 

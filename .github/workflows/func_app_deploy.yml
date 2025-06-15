@@ -33,6 +33,11 @@ on:
                 required: true
                 default: ''
                 type: string
+            aaname:
+                description: "Automation Account name"
+                required: true
+                default: ''
+                type: string
 
 permissions:
     id-token: write
@@ -46,6 +51,7 @@ env:
     AzFaAppRegClient: ${{secrets.AZURE_FUNCTION_APP_CLIENT}}
     ResourceGroupName: ${{github.event.inputs.rgname}}
     AppConfigName: ${{github.event.inputs.acname}}
+    AutomationAccountname: ${{github.event.inputs.aaname}}
 
 jobs:
     FunctionAppDeployment:
