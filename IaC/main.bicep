@@ -60,6 +60,7 @@ resource automationAccount 'Microsoft.Automation/automationAccounts@2024-10-23' 
   identity: {type:'SystemAssigned'}
   properties:{
     sku: {name: 'Free'}
+    encryption:{keySource:'Microsoft.Automation'}
     publicNetworkAccess: true
   }
 }
