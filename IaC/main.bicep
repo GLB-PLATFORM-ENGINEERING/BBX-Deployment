@@ -70,7 +70,7 @@ resource automationAccounts_AppConfig_var 'Microsoft.Automation/automationAccoun
   name: 'AppConfigName'
   properties: {
     isEncrypted: false
-    value: appConfigName
+    value: '"${appConfigName}"'
   }
 }
 
