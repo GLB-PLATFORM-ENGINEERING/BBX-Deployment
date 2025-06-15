@@ -78,6 +78,7 @@ resource aasystemAssignedIdentityAppConfig 'Microsoft.Authorization/roleAssignme
   scope: appConfig
   properties: {
     principalId:automationAccount.identity.principalId
+    principalType:'ServicePrincipal'
     roleDefinitionId:subscriptionResourceId('Microsoft.Authorization/roleDefintions', '5ae67dd6-50cb-40e7-96ff-dc2bfa4b606b')
   }
 }
