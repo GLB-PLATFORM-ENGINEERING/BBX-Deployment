@@ -25,8 +25,10 @@ on:
 env:
   Customer: ${{github.event.inputs.customer}}
   Environment: ${{github.event.inputs.environment}}
-  FunctionAppName: "fa-boc-$(echo ${{github.event.inputs.customer}} | tr '[:upper:]' '[:lower:]')$(echo ${{github.event.inputs.environment}} | tr '[:upper:]' '[:lower:]')"
-  AppConfigurationName: "ac-boc-$(echo ${{github.event.inputs.customer}} | tr '[:upper:]' '[:lower:]')$(echo ${{github.event.inputs.environment}} | tr '[:upper:]' '[:lower:]')"
+  CustomerLower: $(echo ${{github.event.inputs.customer}} | tr '[:upper:]' '[:lower:]')
+  EnvironmentLower: $(echo ${{github.event.inputs.environment}} | tr '[:upper:]' '[:lower:]')
+  FunctionAppName: "fa-boc-${CustomerLower}${EnvironmentLower}"
+  AppConfigurationName: "ac-boc-${CustomerLower}${EnvironmentLower}"
 
 jobs:
   FunctionApp:
@@ -42,6 +44,7 @@ jobs:
     
   AppConfiguration:
     name: App Configuration Name
+    needs: FunctionApp
     runs-on: ubutnu-latest
     steps:
       - name: Checkout code
