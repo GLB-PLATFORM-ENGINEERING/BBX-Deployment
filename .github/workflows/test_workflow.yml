@@ -1,0 +1,52 @@
+name: Test workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      customer:
+        description: "Customer name"
+        required: true
+        default: "XOC"
+        options:
+          - XOC
+          - BBX
+          - AVA
+          - DSS
+        type: choice
+      environment:
+        description: "Deployment environment"
+        required: true
+        default: "CAT"
+        options:
+          - CAT
+          - PROD
+        type: choice
+
+env:
+  Customer: ${{github.event.inputs.customer}}
+  Environment: ${{github.event.inputs.environment}}
+  FunctionAppName: "fa-boc-$(echo ${{github.event.inputs.customer}} | tr '[:upper:]' '[:lower:]')$(echo ${{github.event.inputs.environment}} | tr '[:upper:]' '[:lower:]')"
+  AppConfigurationName: "ac-boc-$(echo ${{github.event.inputs.customer}} | tr '[:upper:]' '[:lower:]')$(echo ${{github.event.inputs.environment}} | tr '[:upper:]' '[:lower:]')"
+
+jobs:
+  FunctionApp:
+    name: Function App Name
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Print Function App name
+        run: |
+          echo ${FunctionAppName}
+    
+  AppConfiguration:
+    name: App Configuration Name
+    runs-on: ubutnu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Print App configuration name
+        run: |
+          echo ${AppConfigurationName}
