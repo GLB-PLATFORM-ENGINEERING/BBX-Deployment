@@ -1,0 +1,6 @@
+{
+    "FunctionAppName":"",
+    "ResourceGroupName":"",
+    "AA-ConfigDB:SqlConnectionString":"Server=sql-boc-${Customer}cat.database.windows.net;Database=AA-ConfigDB;Encrypt=True;Authentication=Active Directory Managed Identity;",
+    "AA-SDUIDB:SqlConnectionString":"Server=sql-boc-${Customer}cat.database.windows.net;Database=AA-ConfigDB;Encrypt=True;Authentication=Active Directory Managed Identity;"
+}
