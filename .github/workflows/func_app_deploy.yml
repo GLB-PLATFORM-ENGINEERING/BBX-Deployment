@@ -83,7 +83,7 @@ jobs:
                 --arg resGroupNameVal "$ResourceGroupName" \
                 'if .FunctionAppName == "" then .FunctionAppName = $funcAppNameVal else . end |
                 if .ResourceGroupName == "" then .ResourceGroupName = $resGroupNameVal else . end'
-                $input_file > "appsettings.json"
+                $input_file > appsettings.json
             
             - name: Import configuration file to App Configuration
               uses: azure/cli@v2
