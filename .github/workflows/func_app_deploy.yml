@@ -86,6 +86,7 @@ jobs:
                     # json+="\"FunctionAppURL\":\"https://google.com\""
                     # json+="}"
                     # echo "$json" > appsettings.json
+                    sudo apt-get update && sudo apt-get install -y jq
                     input_file="./IaC/Templates/AppConfiguration/keys.json"
                     jq --arg funcAppNameVal "$functionAppName" \
                     --arg resGroupNameVal "$ResourceGroupName" \
