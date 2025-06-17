@@ -74,6 +74,15 @@ jobs:
                 azcliversion: 'latest'
                 inlineScript: |
                     az stack group create --name $DeploymentStackName --resource-group $ResourceGroupName --parameters ./IaC/main.bicepparam --action-on-unmanage deleteResources --deny-settings-mode none
+
+            - name: Create App configuration file
+              run: |
+                input_file="./IaC/Templates/AppConfiguration/keys.json"
+                jq --arg funcAppNameVal "$functionAppName" \
+                --arg resGroupNameVal "$ResourceGroupName" \
+                'if .FunctionAppName == "" then .FunctionAppName = $funcAppNameVal else . end |
+                if .ResourceGroupName == "" then .ResourceGroupName = $resGroupNameVal else . end'
+                $input_file > "appsettings.json"
             
             - name: Import configuration file to App Configuration
               uses: azure/cli@v2
@@ -86,13 +95,6 @@ jobs:
                     # json+="\"FunctionAppURL\":\"https://google.com\""
                     # json+="}"
                     # echo "$json" > appsettings.json
-                    sudo apt-get update && sudo apt-get install -y jq
-                    input_file="./IaC/Templates/AppConfiguration/keys.json"
-                    jq --arg funcAppNameVal "$functionAppName" \
-                    --arg resGroupNameVal "$ResourceGroupName" \
-                    'if .FunctionAppName == "" then .FunctionAppName = $funcAppNameVal else . end |
-                    if .ResourceGroupName == "" then .ResourceGroupName = $resGroupNameVal else . end'
-                    $input_file > "appsettings.json"
                     az appconfig kv import --name $AppConfigName --auth-mode login --source file --path appsettings.json --format json --separator : --yes # User assigned managed identity should be assigned the role of App config data owner
 
 
