@@ -82,7 +82,7 @@ jobs:
                 jq --arg funcAppNameVal "$functionAppName" \
                    --arg resGroupNameVal "$ResourceGroupName" \
                    'if .FunctionAppName == "" then .FunctionAppName = $funcAppNameVal else . end |
-                    if .ResourceGroupName == "" then .ResourceGroupName = $resGroupNameVal else . end'
+                    if .ResourceGroupName == "" then .ResourceGroupName = $resGroupNameVal else . end' \
                    $input_file > appsettings.json
             
             - name: Import configuration file to App Configuration
