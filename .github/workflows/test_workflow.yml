@@ -32,8 +32,8 @@ jobs:
         env:
           FunctionAppName: ${{vars.AZ_FUNCTIONAPPNAME}}
           ResourceGroupName: ${{vars.AZ_RESOURCEGROUPNAME}}
-          KeyVaultName: "kv-BoC-${Customer}${Environment}"
+          KeyVaultName: "kv-BoC-${{env.Customer}}${{env.Environment}}"
         run: |
           echo "Function App Name: ${FunctionAppName}"
           echo "Resource Group Name: ${ResourceGroupName}"
-          echo "Key Vault Name: kv-BoC-${KeyVaultName}"
+          echo "Key Vault Name: ${KeyVaultName}"
