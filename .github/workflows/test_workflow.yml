@@ -17,7 +17,6 @@ on:
 env:
   Customer: ${{github.event.inputs.customer}}
   Environment: ${{github.ref_name == 'cat' && 'CAT' || github.ref_name == 'main' && 'PROD'}}
-  KeyVaultName: "kv-BoC-${Customer}${Environment}"
 
 jobs:
   FunctionApp:
@@ -33,7 +32,8 @@ jobs:
         env:
           FunctionAppName: ${{vars.AZ_FUNCTIONAPPNAME}}
           ResourceGroupName: ${{vars.AZ_RESOURCEGROUPNAME}}
+          KeyVaultName: "kv-BoC-${Customer}${Environment}"
         run: |
           echo "Function App Name: ${FunctionAppName}"
           echo "Resource Group Name: ${ResourceGroupName}"
-          echo "Key Vault Name: ${KeyVaultName}"
+          echo "Key Vault Name: kv-BoC-${KeyVaultName}"
