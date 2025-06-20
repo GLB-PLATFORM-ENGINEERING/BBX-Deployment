@@ -33,6 +33,6 @@ jobs:
           ResourceGroupName:${{vars.AZ_RESOURCEGROUPNAME}}
           Environment:${{github.ref_name == 'cat' && 'CAT' || github.ref_name == 'main' && 'PROD'}}
         run: |
-          echo "Function App Name: $FunctionAppName"
-          echo "Resource Group Name: $ResourceGroupName"
+          echo "Function App Name: ${FunctionAppName}"
+          echo "Resource Group Name: ${ResourceGroupName}"
           echo "Key Vault Name: kv-BoC-${Customer}${Environment}"
