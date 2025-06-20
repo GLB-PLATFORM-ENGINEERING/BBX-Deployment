@@ -16,6 +16,7 @@ on:
 
 env:
   Customer: ${{github.event.inputs.customer}}
+  Environment: ${{github.ref_name == 'cat' && 'CAT' || github.ref_name == 'main' && 'PROD'}}
 
 jobs:
   FunctionApp:
@@ -31,7 +32,6 @@ jobs:
         env:
           FunctionAppName: ${{vars.AZ_FUNCTIONAPPNAME}}
           ResourceGroupName: ${{vars.AZ_RESOURCEGROUPNAME}}
-          Environment: ${{github.ref_name == 'cat' && 'CAT' || github.ref_name == 'main' && 'PROD'}}
         run: |
           echo "Function App Name: ${FunctionAppName}"
           echo "Resource Group Name: ${ResourceGroupName}"
