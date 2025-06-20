@@ -45,18 +45,20 @@ permissions:
 
 env:
     Customer: ${{github.event.inputs.customer}}
-    TenantId: ${{secrets.AZURE_TENANT_ID}}
-    DeploymentStackName: ${{github.event.inputs.dsname}}
-    functionAppName: ${{github.event.inputs.faname}}
-    AzFaAppRegClient: ${{secrets.AZURE_FUNCTION_APP_CLIENT}}
-    ResourceGroupName: ${{github.event.inputs.rgname}}
-    AppConfigName: ${{github.event.inputs.acname}}
+    TenantId: ${{secrets.AZURE_TENANT_ID}} # Repo secrets
+    DeploymentStackName: ${{github.event.inputs.dsname}} 
+    functionAppName: ${{github.event.inputs.faname}} 
+    AzFaAppRegClient: ${{secrets.AZURE_FUNCTION_APP_CLIENT}} # Deployment env secrets
+    ResourceGroupName: ${{github.event.inputs.rgname}} # Deployment env vars
+    AppConfigName: ${{github.event.inputs.acname}} 
     AutomationAccountname: ${{github.event.inputs.aaname}}
 
 jobs:
     FunctionAppDeployment:
+        if: github.ref_head == 'cat' || github.ref_head == 'main'
         name: Function App Deployment
         runs-on: ubuntu-latest
+        environment: ${{github.ref_head=='cat' && 'cat' || github.ref_head=='main' && 'prod'}}
         steps:
             - name: Checkout code
               uses: actions/checkout@v4

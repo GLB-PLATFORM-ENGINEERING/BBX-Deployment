@@ -13,43 +13,26 @@ on:
           - AVA
           - DSS
         type: choice
-      environment:
-        description: "Deployment environment"
-        required: true
-        default: "CAT"
-        options:
-          - CAT
-          - PROD
-        type: choice
 
 env:
   Customer: ${{github.event.inputs.customer}}
-  Environment: ${{github.event.inputs.environment}}
-  CustomerLower: $(echo ${{github.event.inputs.customer}} | tr '[:upper:]' '[:lower:]')
-  EnvironmentLower: $(echo ${{github.event.inputs.environment}} | tr '[:upper:]' '[:lower:]')
-  FunctionAppName: "fa-boc-${CustomerLower}${EnvironmentLower}"
-  AppConfigurationName: "ac-boc-${CustomerLower}${EnvironmentLower}"
 
 jobs:
   FunctionApp:
+    if: github.ref_head == 'cat' || github.ref_head == 'main'
     name: Function App Name
     runs-on: ubuntu-latest
+    environment: ${{github.ref_head=='cat' && 'cat' || github.ref_head=='main' && 'prod'}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Print Function App name
+        env:
+          FunctionAppName:${{vars.AZ_FUNCTIONAPPNAME}}
+          ResourceGroupName:${{vars.AZ_RESOURCEGROUPNAME}}
+          Environment:${{github.ref_head == 'cat' && 'CAT' || github.ref_head == 'main' && 'PROD'}}
         run: |
-          echo ${FunctionAppName}
-    
-  AppConfiguration:
-    name: App Configuration Name
-    needs: FunctionApp
-    runs-on: ubutnu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Print App configuration name
-        run: |
-          echo ${AppConfigurationName}
+          echo "Function App Name: $FunctionAppName"
+          echo "Resource Group Name: $ResourceGroupName"
+          echo "Key Vault Name: kv-BoC-${Customer}${Environment}"
